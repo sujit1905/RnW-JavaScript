@@ -7,7 +7,7 @@ type SliderType = {
 
 const slider: SliderType[] = [
     {
-        img: "images/image.png",
+        img: "i8mages/image.png",
         title: "VIRAT KOHLI",
         description: [
             "ICC U-19 World Cup",
