@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flip Timer</title>
+
+  <style>
+    body {
+      background-color: gray;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 97vh;
+      font-family: Arial, sans-serif;
+    }
+
+    #countdown {
+      display: flex;
+      gap: 20px;
+      font-size: 30px;
+      font-weight: bold;
+      color: white;
+    }
+
+    .flip-box {
+      background: black;
+      padding: 20px 25px;
+      border-radius: 10px;
+      position: relative;
+      perspective: 300px;
+      text-align: center;
+    }
+
+    .num {
+      font-size: 45px;
+      display: inline-block;
+    }
+
+    /* Flip animation */
+    .flip {
+      animation: flip 0.6s ease;
+    }
+
+    @keyframes flip {
+      0% { transform: rotateX(0); }
+      50% { transform: rotateX(-90deg); }
+      100% { transform: rotateX(0); }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="countdown">
+    <div class="flip-box"><span id="days" class="num">0</span>d</div>
+    <div class="flip-box"><span id="hours" class="num">0</span>h</div>
+    <div class="flip-box"><span id="minutes" class="num">0</span>m</div>
+    <div class="flip-box"><span id="seconds" class="num">0</span>s</div>
+  </div>
+
+  <script>
+    const targetDate = new Date("2025-12-09T14:02:00").getTime();
+
+    // Flip animation trigger
+    function updateFlip(id, newValue) {
+      const element = document.getElementById(id);
+      if (element.innerText !== newValue.toString()) {
+        element.classList.add("flip");
+        element.innerText = newValue;
+        setTimeout(() => element.classList.remove("flip"), 600);
+      }
+    }
+
+    setInterval(() => {
+      let now = new Date().getTime();
+      let distance = targetDate - now;
+
+      if (distance < 0) {
+        document.getElementById("countdown").innerHTML = "TIME UP!!";
+        return;
+      }
+
+      let days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      updateFlip("days", days);
+      updateFlip("hours", hours);
+      updateFlip("minutes", minutes);
+      updateFlip("seconds", seconds);
+
+    }, 1000);
+  </script>
+
+</body>
+</html>
