@@ -35,7 +35,7 @@
   </head>
   <body>
     <h2>Quiz</h2>
-    <div class="timer"><span id="time"></span></div>
+    <div class="timer">Time left: <span id="time"></span></div>
     <div id="quizContainer">
       <div id="questionContainer">
         <div id="question"></div>
@@ -77,6 +77,17 @@
     const result=document.getElementById("result")
     const nextbtn=document.getElementById("next-btn")
     const prvbtn=document.getAnimations("prv-btn")
+
+    function startTimer(){
+      timer=setInterval(()=>{
+        time--
+        timerEl.innerText=time
+        if(time<=0){
+         clearInterval(timer)
+        }
+      },1000)
+    }
+    startTimer();
 
   </script>
 </html>
