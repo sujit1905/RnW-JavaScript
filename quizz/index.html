@@ -4,105 +4,235 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quiz</title>
+
     <style>
-      *{
-        font-family: Arial;
+      * {
+        font-family: Arial, sans-serif;
         padding: 0;
         margin: 0;
         box-sizing: border-box;
       }
-      body{
-        height: 100%;
-        width: 100%;
-        background: cadetblue;
+
+      body {
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.845);
         display: flex;
         align-items: center;
         justify-content: center;
         flex-direction: column;
+        padding: 20px;
+        color: #fff;
       }
-      button{
-        padding: 5px;
-        background-color: rgba(255, 127, 80, 0.696);
-        border-radius: 2px;
-        border: 1px solid black;
+
+      h2 {
+        color: #ffeb3b;
+        font-size: 36px;
+        margin-bottom: 10px;
+      }
+
+      #quizContainer {
+        background: #ffffff;
+        width: 320px;
+        padding: 20px;
+        border-radius: 8px;
+        color: #000;
+        text-align: center;
+      }
+
+      #question {
+        font-size: 18px;
         font-weight: 600;
+        margin-bottom: 15px;
+      }
+
+      .options {
+        width: 100%;
+        padding: 10px;
+        background-color: #f0f0a0;
+        border-radius: 4px;
+        margin: 8px 0;
+        font-size: 15px;
+        border: 1px solid #ccc;
         cursor: pointer;
       }
-      .result{
+
+      .selected {
+        background-color: #ffe066 !important;
+        border: 2px solid orange;
+      }
+
+      #prv-btn,
+      #next-btn {
+        padding: 8px 20px;
+        margin: 10px 5px;
+        background-color: coral;
+        border-radius: 4px;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+        color: #fff;
+      }
+
+      #result {
         display: none;
+        background: white;
+        color: black;
+        padding: 20px;
+        border-radius: 8px;
+        font-size: 22px;
+        margin-top: 20px;
       }
     </style>
   </head>
+
   <body>
     <h2>Quiz</h2>
-    <div class="timer">Time left: <span id="time"></span></div>
+
     <div id="quizContainer">
-      <div id="questionContainer">
-        <div id="question"></div>
-        <div id="options"></div>
-      </div>
+      <div id="question"></div>
+      <div id="options"></div>
+
       <button id="prv-btn">Prv</button>
       <button id="next-btn">Next</button>
     </div>
+
     <div id="result"></div>
-  </body>
-  <script>
-    const questions=[
-      {
-        question:"2+2=?",
-        Options:["4","6","4","5"],
-        answer:1
-      },
-      {
-        question:"2+5=?",
-        Options:["4","6","7","5"],
-        answer:3
-      },
-      {
-        question:"2+7=?",
-        Options:["4","6","4","9"],
-        answer:4
-      }
-    ]
 
-    let timer;
-    let time=30;
-    let score=0;
-    let index=0;
+    <script>
+      const questions = [
+        {
+          question: "What is the capital of India?",
+          options: ["Mumbai", "Delhi", "Kolkata", "Chennai"],
+          answer: 1,
+        },
+        {
+          question: "Which planet is known as the Red Planet?",
+          options: ["Earth", "Mars", "Venus", "Jupiter"],
+          answer: 1,
+        },
+        {
+          question: "How many days are there in a leap year?",
+          options: ["364", "365", "366", "367"],
+          answer: 2,
+        },
+        {
+          question: "Who is known as the Father of Computers?",
+          options: [
+            "Thomas Edison",
+            "Albert Einstein",
+            "Charles Babbage",
+            "Isaac Newton",
+          ],
+          answer: 2,
+        },
+        {
+          question: "Which is the largest ocean in the world?",
+          options: [
+            "Indian Ocean",
+            "Pacific Ocean",
+            "Atlantic Ocean",
+            "Arctic Ocean",
+          ],
+          answer: 1,
+        },
+        {
+          question: "Which gas do plants release during photosynthesis?",
+          options: ["Oxygen", "Carbon dioxide", "Nitrogen", "Hydrogen"],
+          answer: 0,
+        },
+        {
+          question: "Which country invented paper?",
+          options: ["India", "China", "Egypt", "Japan"],
+          answer: 1,
+        },
+        {
+          question: "How many continents are there in the world?",
+          options: ["5", "6", "7", "8"],
+          answer: 2,
+        },
+        {
+          question: "Which animal is known as the King of the Jungle?",
+          options: ["Tiger", "Lion", "Elephant", "Leopard"],
+          answer: 1,
+        },
+        {
+          question: "What is the largest mammal on Earth?",
+          options: ["Elephant", "Blue Whale", "Giraffe", "Shark"],
+          answer: 1,
+        },
+      ];
 
-    const questionEl=document.getElementById("question")
-    const optionsEl=document.getElementById("options")
-    const timerEl=document.getElementById("time")
-    const quizContainer=document.getElementById("questionContainer")
-    const result=document.getElementById("result")
-    const nextbtn=document.getElementById("next-btn")
-    const prvbtn=document.getAnimations("prv-btn")
+      let index = 0;
+      let score = 0;
 
-    function startTimer(){
-      timer=setInterval(()=>{
-        time--
-        timerEl.innerText=time
-        if(time<=0){
-         clearInterval(timer)
-        }
-      },1000)
-    }
+      const questionEl = document.getElementById("question");
+      const optionsEl = document.getElementById("options");
+      const nextbtn = document.getElementById("next-btn");
+      const prvbtn = document.getElementById("prv-btn");
+      const result = document.getElementById("result");
 
-    function loadQuestions(){
-        let ql=questions[index];
-        question.innerText=ql.question
-        options.innerText=""
+      let selectedAnswers = Array(questions.length).fill(null);
 
-        ql.options.forEach((opt,i)=>{
-          let btn=document.createElement("button")
-          btn.innerHTML=opt;
-          btn.onclick=()=>selectOption(i);
+      function loadQuestions() {
+        const q = questions[index];
+        questionEl.innerText = `Q${index + 1}. ${q.question}`;
+        optionsEl.innerHTML = "";
 
+        q.options.forEach((opt, i) => {
+          const btn = document.createElement("button");
+          btn.innerText = opt;
+          btn.classList.add("options");
+
+          // highlight previously selected answer
+          if (selectedAnswers[index] === i) {
+            btn.classList.add("selected");
+          }
+
+          btn.onclick = () => selectOption(btn, i);
           optionsEl.appendChild(btn);
-        })
-    }
+        });
+      }
 
-    
+      function selectOption(button, i) {
+        selectedAnswers[index] = i;
 
-  </script>
+        // remove previous highlight
+        document.querySelectorAll(".options").forEach((btn) => {
+          btn.classList.remove("selected");
+        });
+
+        // highlight new one
+        button.classList.add("selected");
+      }
+
+      nextbtn.onclick = () => {
+        if (index < questions.length - 1) {
+          index++;
+          loadQuestions();
+        } else {
+          calculateScore();
+        }
+      };
+
+      prvbtn.onclick = () => {
+        if (index > 0) {
+          index--;
+          loadQuestions();
+        }
+      };
+
+      function calculateScore() {
+        score = 0;
+        selectedAnswers.forEach((ans, i) => {
+          if (ans === questions[i].answer) score++;
+        });
+
+        document.getElementById("quizContainer").style.display = "none";
+        result.style.display = "block";
+        result.innerHTML = `<h3>Your score: ${score}/${questions.length}</h3>`;
+      }
+
+      loadQuestions();
+    </script>
+  </body>
 </html>
