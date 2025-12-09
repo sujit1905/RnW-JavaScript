@@ -87,7 +87,22 @@
         }
       },1000)
     }
-    startTimer();
+
+    function loadQuestions(){
+        let ql=questions[index];
+        question.innerText=ql.question
+        options.innerText=""
+
+        ql.options.forEach((opt,i)=>{
+          let btn=document.createElement("button")
+          btn.innerHTML=opt;
+          btn.onclick=()=>selectOption(i);
+
+          optionsEl.appendChild(btn);
+        })
+    }
+
+    
 
   </script>
 </html>
