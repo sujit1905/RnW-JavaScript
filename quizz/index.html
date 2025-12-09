@@ -27,6 +27,9 @@
         border: 1px solid black;
         font-weight: 600;
       }
+      .result{
+        display: none;
+      }
     </style>
   </head>
   <body>
@@ -60,5 +63,19 @@
         answer:4
       }
     ]
+
+    let timer;
+    let time=30;
+    let score=0;
+    let index=0;
+
+    const questionEl=document.getElementById("question")
+    const optionsEl=document.getElementById("options")
+    const timerEl=document.getElementById("time")
+    const quizContainer=document.getElementById("questionContainer")
+    const result=document.getElementById("result")
+    const nextbtn=document.getElementById("next-btn")
+    const prvbtn=document.getAnimations("prv-btn")
+
   </script>
 </html>
