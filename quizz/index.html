@@ -1,242 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Styled Quiz</title>
-
-  <style>
-    * {
-      padding: 0;
-      margin: 0;
-      box-sizing: border-box;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-
-    body {
-      background: linear-gradient(135deg, #556270, #4ecdc4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      color: #fff;
-    }
-
-    .quiz-card {
-      width: 350px;
-      background: #ffffff22;
-      padding: 25px;
-      border-radius: 15px;
-      box-shadow: 0 0 20px #00000040;
-      animation: fadeIn 0.7s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 15px;
-      font-size: 24px;
-      color: #fff;
-    }
-
-    /* TIMER CIRCLE */
-    .timer-circle {
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      border: 5px solid #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      margin: 10px auto 20px;
-      font-weight: bold;
-      background: #ffffff33;
-    }
-
-    #question {
-      font-size: 18px;
-      margin-bottom: 20px;
-    }
-
-    .option {
-      display: block;
-      width: 100%;
-      background: #ffffff33;
-      border: none;
-      padding: 10px;
-      margin: 8px 0;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: 0.3s;
-      color: #fff;
-      text-align: left;
-    }
-
-    .option:hover {
-      background: #4ecdc4;
-    }
-
-    .correct { background: #2ecc71 !important; }
-    .wrong { background: #e74c3c !important; }
-
-    button {
-      width: 48%;
-      padding: 10px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: bold;
-      background: #3498db;
-      color: white;
-      transition: 0.3s;
-    }
-
-    button:hover {
-      background: #217dbb;
-    }
-
-    #result {
-      text-align: center;
-      font-size: 22px;
-      margin-top: 20px;
-      font-weight: bold;
-    }
-  </style>
-</head>
-
-<body>
-
-  <div class="quiz-card">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz</title>
+    <style>
+      *{
+        font-family: Arial;
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+      body{
+        height: 100%;
+        width: 100%;
+        background: cadetblue;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+      button{
+        padding: 5px;
+        background-color: rgba(255, 127, 80, 0.696);
+        border-radius: 2px;
+        border: 1px solid black;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
     <h2>Quiz</h2>
-
-    <div class="timer-circle" id="time">60</div>
-
+    <div class="timer"><span id="time"></span></div>
     <div id="quizContainer">
-      <div id="question"></div>
-      <div id="options"></div>
-
-      <div style="display:flex; justify-content:space-between; margin-top:20px;">
-        <button id="prv-btn">Previous</button>
-        <button id="next-btn">Next</button>
+      <div id="questionContainer">
+        <div id="question"></div>
+        <div id="options"></div>
       </div>
+      <button id="prv-btn">Prv</button>
+      <button id="next-btn">Next</button>
     </div>
-
-    <div id="result" style="display:none"></div>
-  </div>
-
+    <div id="result"></div>
+  </body>
   <script>
-    const questions = [
+    const questions=[
       {
-        question: "1. What is the capital of France?",
-        options: ["A. Rome","B. Paris","C. Madrid","D. Berlin"],
-        answer: 1
+        question:"2+2=?",
+        Options:["4","6","4","5"],
+        answer:1
       },
       {
-        question: "2. Which planet is known as the Red Planet?",
-        options: ["A. Venus","B. Saturn","C. Mars","D. Jupiter"],
-        answer: 2
+        question:"2+5=?",
+        Options:["4","6","7","5"],
+        answer:3
       },
       {
-        question: "3. How many days are in a leap year?",
-        options: ["A. 365","B. 366","C. 364","D. 360"],
-        answer: 1
-      },
-      {
-        question: "4. What do plants produce during photosynthesis?",
-        options: ["A. Oxygen","B. Nitrogen","C. Carbon dioxide","D. Sulfur"],
-        answer: 0
-      },
-      {
-        question: "5. Which animal is called King of the Jungle?",
-        options: ["A. Tiger","B. Lion","C. Elephant","D. Cheetah"],
-        answer: 1
+        question:"2+7=?",
+        Options:["4","6","4","9"],
+        answer:4
       }
-    ];
-
-    let index = 0;
-    let score = 0;
-    let timeleft = 60;
-    let timer;
-
-    const questionEl = document.getElementById("question");
-    const optionsEl = document.getElementById("options");
-    const nextBtn = document.getElementById("next-btn");
-    const prvBtn = document.getElementById("prv-btn");
-    const resultEl = document.getElementById("result");
-    const timeEl = document.getElementById("time");
-    const quizContainer = document.getElementById("quizContainer");
-
-    function startTimer() {
-      timer = setInterval(() => {
-        timeleft--;
-        timeEl.innerText = timeleft;
-        if (timeleft <= 0) endQuiz();
-      }, 1000);
-    }
-
-    function showQuestion() {
-      let q = questions[index];
-      questionEl.innerHTML = q.question;
-      optionsEl.innerHTML = "";
-
-      q.options.forEach((opt, i) => {
-        let btn = document.createElement("button");
-        btn.className = "option";
-        btn.innerHTML = opt;
-
-        btn.onclick = () => checkAnswer(i, btn);
-        optionsEl.appendChild(btn);
-      });
-    }
-
-    function checkAnswer(i, btn) {
-      const buttons = document.querySelectorAll(".option");
-
-      buttons.forEach(b => b.disabled = true);
-
-      if (i === questions[index].answer) {
-        btn.classList.add("correct");
-        score++;
-      } else {
-        btn.classList.add("wrong");
-      }
-
-      setTimeout(() => {
-        index++;
-        index < questions.length ? showQuestion() : endQuiz();
-      }, 700);
-    }
-
-    nextBtn.onclick = () => {
-      if (index < questions.length - 1) {
-        index++;
-        showQuestion();
-      }
-    }
-
-    prvBtn.onclick = () => {
-      if (index > 0) {
-        index--;
-        showQuestion();
-      }
-    }
-
-    function endQuiz() {
-      clearInterval(timer);
-      quizContainer.style.display = "none";
-      resultEl.style.display = "block";
-      resultEl.innerHTML = `Your Score: ${score} / ${questions.length}`;
-    }
-
-    showQuestion();
-    startTimer();
+    ]
   </script>
-
-</body>
 </html>
