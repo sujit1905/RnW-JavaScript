@@ -6,6 +6,7 @@
     <title>Quiz</title>
 
     <style>
+      /* Resetting common styling */
       * {
         font-family: Arial, sans-serif;
         padding: 0;
@@ -98,7 +99,9 @@
 
     <div id="result"></div>
 
+    <!-- starting the script -->
     <script>
+      // Array of quiz questions
       const questions = [
         {
           question: "What is the capital of India?",
@@ -162,76 +165,89 @@
         },
       ];
 
-      let index = 0;
-      let score = 0;
+      let index = 0; // current question index
+      let score = 0; // total score
 
+      // Accessing elements
       const questionEl = document.getElementById("question");
       const optionsEl = document.getElementById("options");
       const nextbtn = document.getElementById("next-btn");
       const prvbtn = document.getElementById("prv-btn");
       const result = document.getElementById("result");
 
+      // Store selected answers for each question
       let selectedAnswers = Array(questions.length).fill(null);
 
+      // Load question and its options on screen
       function loadQuestions() {
         const q = questions[index];
         questionEl.innerText = `Q${index + 1}. ${q.question}`;
         optionsEl.innerHTML = "";
 
+        // Creating option buttons dynamically
         q.options.forEach((opt, i) => {
           const btn = document.createElement("button");
           btn.innerText = opt;
           btn.classList.add("options");
 
-          // highlight previously selected answer
+          // Highlight if previously selected
           if (selectedAnswers[index] === i) {
             btn.classList.add("selected");
           }
 
+          // On clicking an option
           btn.onclick = () => selectOption(btn, i);
           optionsEl.appendChild(btn);
         });
       }
 
+      // When an option is selected
       function selectOption(button, i) {
-        selectedAnswers[index] = i;
+        selectedAnswers[index] = i; // save answer
 
-        // remove previous highlight
+        // remove highlight from all buttons
         document.querySelectorAll(".options").forEach((btn) => {
           btn.classList.remove("selected");
         });
 
-        // highlight new one
+        // highlight selected option
         button.classList.add("selected");
       }
 
+      // Next button functionality
       nextbtn.onclick = () => {
         if (index < questions.length - 1) {
-          index++;
+          index++; // move to next question
           loadQuestions();
         } else {
-          calculateScore();
+          calculateScore(); // if last question, calculate score
         }
       };
 
+      // Previous button functionality
       prvbtn.onclick = () => {
         if (index > 0) {
-          index--;
+          index--; // go back to previous question
           loadQuestions();
         }
       };
 
+      // Calculate final score
       function calculateScore() {
         score = 0;
+
+        // comparing selected answers with correct answers
         selectedAnswers.forEach((ans, i) => {
           if (ans === questions[i].answer) score++;
         });
 
+        // hide quiz and show result
         document.getElementById("quizContainer").style.display = "none";
         result.style.display = "block";
         result.innerHTML = `<h3>Your score: ${score}/${questions.length}</h3>`;
       }
 
+      // Initial load
       loadQuestions();
     </script>
   </body>
