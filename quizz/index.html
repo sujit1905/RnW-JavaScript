@@ -6,6 +6,7 @@
     <title>Quiz</title>
 
     <style>
+      /* Basic layout styling */
       * {
         font-family: Arial, sans-serif;
         padding: 0;
@@ -30,6 +31,7 @@
         margin-bottom: 10px;
       }
 
+      /* Quiz box */
       #quizContainer {
         background: #ffffff;
         width: 320px;
@@ -45,6 +47,7 @@
         margin-bottom: 15px;
       }
 
+      /* Option buttons */
       .options {
         width: 100%;
         padding: 10px;
@@ -56,11 +59,13 @@
         cursor: pointer;
       }
 
+      /* Highlight selected option */
       .selected {
         background-color: #ffe066 !important;
         border: 2px solid orange;
       }
 
+      /* Navigation buttons */
       #prv-btn,
       #next-btn {
         padding: 8px 20px;
@@ -73,6 +78,7 @@
         color: #fff;
       }
 
+      /* Result box */
       #result {
         display: none;
         background: white;
@@ -99,6 +105,7 @@
     <div id="result"></div>
 
     <script>
+      /* List of quiz questions */
       const questions = [
         {
           question: "What is the capital of India?",
@@ -117,22 +124,12 @@
         },
         {
           question: "Who is known as the Father of Computers?",
-          options: [
-            "Thomas Edison",
-            "Albert Einstein",
-            "Charles Babbage",
-            "Isaac Newton",
-          ],
+          options: ["Thomas Edison", "Albert Einstein", "Charles Babbage", "Isaac Newton"],
           answer: 2,
         },
         {
           question: "Which is the largest ocean in the world?",
-          options: [
-            "Indian Ocean",
-            "Pacific Ocean",
-            "Atlantic Ocean",
-            "Arctic Ocean",
-          ],
+          options: ["Indian Ocean", "Pacific Ocean", "Atlantic Ocean", "Arctic Ocean"],
           answer: 1,
         },
         {
@@ -162,17 +159,21 @@
         },
       ];
 
+      /* Track current question and total score */
       let index = 0;
       let score = 0;
 
+      /* DOM references */
       const questionEl = document.getElementById("question");
       const optionsEl = document.getElementById("options");
       const nextbtn = document.getElementById("next-btn");
       const prvbtn = document.getElementById("prv-btn");
       const result = document.getElementById("result");
 
+      /* Store selected answers */
       let selectedAnswers = Array(questions.length).fill(null);
 
+      // Load question and options on screen
       function loadQuestions() {
         const q = questions[index];
         questionEl.innerText = `Q${index + 1}. ${q.question}`;
@@ -183,7 +184,7 @@
           btn.innerText = opt;
           btn.classList.add("options");
 
-          // highlight previously selected answer
+          // Restore highlight for previously selected option
           if (selectedAnswers[index] === i) {
             btn.classList.add("selected");
           }
@@ -193,18 +194,20 @@
         });
       }
 
+      // Handles selecting an option
       function selectOption(button, i) {
         selectedAnswers[index] = i;
 
-        // remove previous highlight
+        // Clear old selection
         document.querySelectorAll(".options").forEach((btn) => {
           btn.classList.remove("selected");
         });
 
-        // highlight new one
+        // Highlight new selection
         button.classList.add("selected");
       }
 
+      // Go to next question OR submit quiz
       nextbtn.onclick = () => {
         if (index < questions.length - 1) {
           index++;
@@ -214,6 +217,7 @@
         }
       };
 
+      // Go to previous question
       prvbtn.onclick = () => {
         if (index > 0) {
           index--;
@@ -221,8 +225,10 @@
         }
       };
 
+      // Count correct answers and show final result
       function calculateScore() {
         score = 0;
+
         selectedAnswers.forEach((ans, i) => {
           if (ans === questions[i].answer) score++;
         });
@@ -232,6 +238,7 @@
         result.innerHTML = `<h3>Your score: ${score}/${questions.length}</h3>`;
       }
 
+      // Initialize the quiz
       loadQuestions();
     </script>
   </body>
