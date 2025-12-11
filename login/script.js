@@ -1,5 +1,4 @@
     let userDB = JSON.parse(localStorage.getItem("users")) || [];
-
     function Ragister() {
     let username = document.getElementById("reg-username").value;
     let password = document.getElementById("reg-password").value;
