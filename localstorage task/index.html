@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Students — LocalStorage</title>
+    <style>
+      :root{
+        --bg: #f5f7fb;
+        --card: #ffffff;
+        --muted: #6b7280;
+        --accent: #0ea5a0;
+        --danger: #ef4444;
+        --glass: rgba(15,23,42,0.04);
+      }
+      *{box-sizing:border-box}
+      body{
+        font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+        background: linear-gradient(180deg, var(--bg), #eef2ff 120%);
+        padding:32px;
+        color:#0f172a;
+      }
+      .wrap{
+        max-width:900px;
+        margin:0 auto;
+      }
+      header{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:16px;
+        margin-bottom:18px;
+      }
+      h1{font-size:20px;letter-spacing:0.2px}
+      p.lead{color:var(--muted);font-size:13px}
+
+      .card{
+        background:var(--card);
+        box-shadow:0 6px 18px rgba(2,6,23,0.06);
+        border-radius:12px;
+        padding:18px;
+      }
+
+      .form-row{
+        display:flex;
+        gap:10px;
+        align-items:center;
+        flex-wrap:wrap;
+      }
+      input[type=text], input[type=number]{
+        padding:10px 12px;
+        border-radius:8px;
+        border:1px solid #e6eef7;
+        min-width:180px;
+        outline:none;
+        background:var(--glass);
+      }
+      input::placeholder{color:var(--muted)}
+      button.primary{
+        background:linear-gradient(90deg,var(--accent),#059669);
+        color:white;
+        border:none;
+        padding:10px 14px;
+        border-radius:8px;
+        cursor:pointer;
+        box-shadow:0 6px 18px rgba(14,165,160,0.12);
+      }
+      button.ghost{
+        background:transparent;
+        border:1px solid #e6eef7;
+        padding:8px 12px;
+        border-radius:8px;
+        cursor:pointer;
+      }
+
+      .table-wrap{overflow:auto;margin-top:16px}
+      table{width:100%;border-collapse:collapse;font-size:14px}
+      thead th{text-align:left;padding:12px 10px;color:var(--muted);font-size:12px}
+      tbody td{padding:12px 10px;border-top:1px solid #f1f5f9}
+      tbody tr:hover{background:linear-gradient(90deg, rgba(14,165,160,0.03), transparent)}
+
+      .actions button{margin-right:8px;padding:6px 10px;border-radius:8px;border:none;cursor:pointer}
+      .actions .edit{background:#fde68a}
+      .actions .del{background:#fecaca}
+
+      .small{font-size:12px;color:var(--muted)}
+
+      /* notification */
+      .notify{
+        position:fixed;right:24px;bottom:24px;background:#052e2b;color:#dffaf6;padding:12px 16px;border-radius:10px;box-shadow:0 8px 30px rgba(2,6,23,0.12);display:none;z-index:1000
+      }
+
+      @media (max-width:640px){
+        header{flex-direction:column;align-items:flex-start}
+        .form-row{flex-direction:column;align-items:stretch}
+        input{width:100%}
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div>
+          <h1>Student Directory</h1>
+          <p class="lead">A tiny demo that stores students in <code>localStorage</code>.</p>
+        </div>
+      </header>
+
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+          <div style="flex:1">
+            <label class="small">Name</label>
+            <div class="form-row" style="margin-top:6px">
+              <input type="text" name="name" id="name" placeholder="e.g. Rahul Sharma" />
+              <input type="number" name="age" id="age" placeholder="Age" />
+              <button id="add" class="primary" onclick="addStudent()">Add Student</button>
+              <button class="ghost" onclick="clearAll()">Clear All</button>
+            </div>
+            <p class="small" style="margin-top:8px">Tip: Click <em>Edit</em> to update a student.</p>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table id="student-table" aria-live="polite">
+            <thead>
+              <tr>
+                <th style="width:60px">#</th>
+                <th>Name</th>
+                <th style="width:90px">Age</th>
+                <th style="width:170px">Action</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="notify" id="notify"></div>
+
+    <script>
+      function getStudents() {
+        return JSON.parse(localStorage.getItem("students")) || [];
+      }
+      function showNotification(msg) {
+        const n = document.getElementById('notify');
+        n.textContent = msg;
+        n.style.display = 'block';
+        clearTimeout(n._t);
+        n._t = setTimeout(()=> n.style.display = 'none', 1700);
+      }
+
+      function addStudent() {
+        const nameEl = document.getElementById("name");
+        const ageEl = document.getElementById("age");
+        const name = nameEl.value.trim();
+        const age = ageEl.value.trim();
+
+        if (name === "" || age === "") {
+          showNotification('Please enter both name and age');
+          return;
+        }
+        let students = getStudents();
+
+        students.push({ name, age });
+        localStorage.setItem("students", JSON.stringify(students));
+        nameEl.value = "";
+        ageEl.value = "";
+        showNotification('Student added');
+        loadTable();
+      }
+
+      function loadTable() {
+        const tbody = document.querySelector('#student-table tbody');
+        const students = getStudents();
+        tbody.innerHTML = '';
+        if (students.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="4" class="small" style="text-align:center;padding:18px">No students yet — add one above.</td></tr>';
+          return;
+        }
+        students.forEach((stu, index) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${escapeHtml(stu.name)}</td>
+            <td>${escapeHtml(stu.age)}</td>
+            <td class="actions">
+              <button class="edit" onclick="editStudent(${index})">Edit</button>
+              <button class="del" onclick="deleteStudent(${index})">Delete</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      function editStudent(index) {
+        let students = getStudents();
+        const newname = prompt("Enter the name:", students[index].name);
+        const newage = prompt("Enter the age:", students[index].age);
+
+        if (newname !== null && newage !== null) {
+          students[index].name = newname;
+          students[index].age = newage;
+          localStorage.setItem("students", JSON.stringify(students));
+          showNotification('Student updated');
+          loadTable();
+        }
+      }
+      function deleteStudent(index) {
+        if (!confirm('Delete this student?')) return;
+        let student = getStudents();
+        student.splice(index, 1);
+        localStorage.setItem("students", JSON.stringify(student));
+        showNotification('Student deleted');
+        loadTable();
+      }
+
+      function clearAll(){
+        if(!confirm('Clear all students?')) return;
+        localStorage.removeItem('students');
+        loadTable();
+        showNotification('All cleared');
+      }
+
+      function escapeHtml(text){
+        return String(text)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      // initial load
+      loadTable();
+    </script>
+  </body>
+</html>
