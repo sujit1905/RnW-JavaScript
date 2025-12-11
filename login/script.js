@@ -63,7 +63,6 @@
             let welcomemsg = (document.getElementById(
             "usernametext"
             ).innerText = `${loggedInUser.username}`);
-
         }
         }
 
