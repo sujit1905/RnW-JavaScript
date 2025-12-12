@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Simple Product Cart UI</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+  body {
+    margin: 0;
+    padding: 30px;
+    font-family: "Poppins", sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #f5f5f5;
+  }
+
+  #inputsection {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    width: 320px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 30px;
+  }
+
+  input, button {
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-family: inherit;
+  }
+
+  button {
+    background-color: #4aa5a7;
+    color: #fff;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: 0.2s;
+  }
+
+  button:hover {
+    background-color: #429292;
+    transform: translateY(-2px);
+  }
+
+  #cards, #cartSection {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    width: 100%;
+    max-width: 1100px;
+  }
+
+  .card, .cart-card {
+    width: 220px;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: 0.3s;
+    padding: 20px;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  }
+
+  .card img, .cart-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  .card h1, .cart-card h3 {
+    margin: 10px 0 5px;
+    font-size: 16px;
+    color: #333;
+  }
+
+  .card h3, .cart-card p {
+    margin: 5px 0;
+    color: #4aa5a7;
+    font-weight: 500;
+  }
+
+  .quantity-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .quantity-controls button {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    font-size: 18px;
+  }
+
+  #cartSummary {
+    margin-bottom: 15px;
+    font-weight: 500;
+    color: #4aa5a7;
+  }
+</style>
+</head>
+
+<body>
+  <div id="inputsection">
+    <input type="file" id="inpfile" title="file"/>
+    <input type="text" id="itemname" placeholder="Item Name" />
+    <input type="number" id="price" placeholder="Price" />
+    <button id="addProduct">Add Product</button>
+  </div>
+
+  <div id="cards"></div>
+
+  <h3>Cart</h3>
+  <div id="cartSummary"></div>
+  <div id="cartSection"></div>
+
+<script>
+let inputImage = document.getElementById("inpfile");
+let productName = document.getElementById("itemname");
+let price = document.getElementById("price");
+let addProduct = document.getElementById("addProduct");
+let cards = document.getElementById("cards");
+let summaryBox = document.getElementById("cartSummary");
+
+let cart = JSON.parse(localStorage.getItem("cartData")) || [];
+
+function saveCart() {
+  localStorage.setItem("cartData", JSON.stringify(cart));
+}
+
+addProduct.addEventListener("click", () => {
+  let file = inputImage.files[0];
+  if(!file) return alert("Select an image");
+
+  let reader = new FileReader();
+  reader.onload = () => {
+    let product = JSON.parse(localStorage.getItem("product123")) || [];
+    product.push({
+      uploadImage: reader.result,
+      name: productName.value,
+      price: Number(price.value),
+      qty: 1
+    });
+    localStorage.setItem("product123", JSON.stringify(product));
+    loadProducts();
+  };
+  reader.readAsDataURL(file);
+});
+
+function loadProducts() {
+  cards.innerHTML = "";
+  let products = JSON.parse(localStorage.getItem("product123")) || [];
+  products.forEach((p,i)=>{
+    cards.innerHTML += `
+      <div class="card">
+        <img src="${p.uploadImage}" alt="">
+        <h1>${p.name}</h1>
+        <h3>$${p.price}</h3>
+        <div class="quantity-controls">
+          <button onclick="decreaseQty(${i})">-</button>
+          <span id="qty-${i}">${p.qty}</span>
+          <button onclick="increaseQty(${i})">+</button>
+        </div>
+        <button onclick="addToCart(${i})">Add To Cart</button>
+      </div>
+    `;
+  });
+}
+
+function increaseQty(i) {
+  let products = JSON.parse(localStorage.getItem("product123"));
+  products[i].qty++;
+  localStorage.setItem("product123", JSON.stringify(products));
+  document.getElementById(`qty-${i}`).innerText = products[i].qty;
+}
+
+function decreaseQty(i) {
+  let products = JSON.parse(localStorage.getItem("product123"));
+  if(products[i].qty>1) products[i].qty--;
+  localStorage.setItem("product123", JSON.stringify(products));
+  document.getElementById(`qty-${i}`).innerText = products[i].qty;
+}
+
+function addToCart(i) {
+  let products = JSON.parse(localStorage.getItem("product123"));
+  let item = products[i];
+  let existing = cart.find(c=>c.name===item.name);
+  if(existing){
+    existing.qty = item.qty;
+    existing.total = item.price*item.qty;
+  }else{
+    cart.push({name:item.name, price:item.price, qty:item.qty, image:item.uploadImage, total:item.price*item.qty});
+  }
+  saveCart();
+  renderCart();
+}
+
+function updateSummary(){
+  let totalItems = cart.length;
+  let totalQty = cart.reduce((sum,p)=>sum+p.qty,0);
+  let totalPrice = cart.reduce((sum,p)=>sum+p.total,0);
+  summaryBox.innerHTML = `Total Items: ${totalItems} | Total Quantity: ${totalQty} | Total Price: $${totalPrice}`;
+}
+
+function renderCart(){
+  let cartBox = document.getElementById("cartSection");
+  cartBox.innerHTML = "";
+  cart.forEach((c,i)=>{
+    cartBox.innerHTML += `
+      <div class="cart-card">
+        <img src="${c.image}" alt="">
+        <h3>${c.name}</h3>
+        <p>Qty: ${c.qty}</p>
+        <p>Total: $${c.total}</p>
+        <button onclick="removeFromCart(${i})" style="background:red; color:#fff; border:none; border-radius:8px; padding:5px 10px; cursor:pointer;">Cancel</button>
+      </div>
+    `;
+  });
+  updateSummary();
+}
+
+function removeFromCart(i){
+  cart.splice(i,1);
+  saveCart();
+  renderCart();
+}
+
+loadProducts();
+renderCart();
+</script>
+</body>
+</html>
