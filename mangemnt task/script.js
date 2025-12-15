@@ -1,4 +1,5 @@
 let userDB = JSON.parse(localStorage.getItem("users")) || [];
+
 let studentTable = document.getElementById("stu");
 let teacherInfo = document.getElementById("teacher-info");
 let teTable = document.getElementById("te");
@@ -31,9 +32,7 @@ function login() {
   let password = document.getElementById("password").value;
   let role = document.getElementById("login-role").value;
 
-  let user = userDB.find(
-    u => u.username === username && u.password === password && u.role === role
-  );
+  let user = userDB.find(u => u.username === username && u.password === password && u.role === role);
 
   if (!user) {
     document.getElementById("error-message").style.display = "block";
@@ -44,14 +43,14 @@ function login() {
 
   document.getElementById("login-form").style.display = "none";
   document.getElementById("error-message").style.display = "none";
-  document.getElementById("log-out").style.display = "block";
+  document.getElementById("log-out").style.display = "inline-block";
   document.getElementById("welcome-msg").style.display = "block";
   document.getElementById("usernametext").innerText = `${user.username} (${user.role})`;
 
   if (user.role === "teacher") {
     teacherInfo.style.display = "block";
     teTable.style.display = "table";
-    loadTeacherTable(user.username); // Load saved students
+    loadTeacherTable(user.username);
   } else {
     studentTable.style.display = "table";
   }
@@ -67,8 +66,7 @@ function logout() {
   document.getElementById("login-form").style.display = "block";
   document.getElementById("log-out").style.display = "none";
   document.getElementById("welcome-msg").style.display = "none";
-
-  clearTeacherTable(); // Remove table rows
+  clearTeacherTable();
 }
 
 /* ================= CHECK LOGIN ================= */
@@ -79,7 +77,7 @@ function checkLoggedIn() {
   hideAllViews();
 
   document.getElementById("login-form").style.display = "none";
-  document.getElementById("log-out").style.display = "block";
+  document.getElementById("log-out").style.display = "inline-block";
   document.getElementById("welcome-msg").style.display = "block";
   document.getElementById("usernametext").innerText = `${user.username} (${user.role})`;
 
@@ -122,11 +120,11 @@ function addStudentToTable(name) {
     <button onclick="removeStudent(this)">Remove</button>
   `;
 
-  saveTeacherTable(); // Save to localStorage
+  saveTeacherTable();
 }
 
 function editStudent(btn) {
-  let row = btn.closest("tr");
+  let row = btn.parentElement.parentElement;
   let newName = prompt("Edit student name:", row.cells[0].innerText);
   if (newName) {
     row.cells[0].innerText = newName;
@@ -135,10 +133,10 @@ function editStudent(btn) {
 }
 
 function removeStudent(btn) {
-  let row = btn.parentElement.parentElement; // button -> td -> tr
-  row.remove();
+  let row = btn.parentElement.parentElement;
+  row.parentElement.removeChild(row);
+  saveTeacherTable();
 }
-
 
 /* ================= LOCAL STORAGE ================= */
 function saveTeacherTable() {
