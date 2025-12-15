@@ -1,108 +1,193 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login System</title>
-  <style>
-    * { font-family: Arial, sans-serif; box-sizing: border-box; }
-    body { padding: 20px; background: #f0f4f8; }
-    #container { max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login System</title>
+    <style>
+      * {
+        font-family: Arial, sans-serif;
+        box-sizing: border-box;
+      }
+      body {
+        padding: 20px;
+        background: #f0f4f8;
+      }
+      #container {
+        max-width: 600px;
+        margin: auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
 
-    h2 { margin-bottom: 10px; color: #333; }
-    input, select, button { margin: 5px 0; padding: 8px; border-radius: 4px; border: 1px solid #ccc; font-size: 14px; }
-    input:focus, select:focus { outline: none; border-color: #007BFF; }
-    
-    button { cursor: pointer; background: #007BFF; color: #fff; border: none; transition: 0.2s; }
-    button:hover { background: #0056b3; }
+      h2 {
+        margin-bottom: 10px;
+        color: #333;
+      }
+      input,
+      select,
+      button {
+        margin: 5px 0;
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+      }
+      input:focus,
+      select:focus {
+        outline: none;
+        border-color: #007bff;
+      }
 
-    #log-out { background: #dc3545; margin-top: 10px; }
-    #log-out:hover { background: #a71d2a; }
+      button {
+        cursor: pointer;
+        background: #007bff;
+        color: #fff;
+        border: none;
+        transition: 0.2s;
+      }
+      button:hover {
+        background: #0056b3;
+      }
 
-    table { border-collapse: collapse; margin-top: 10px; width: 100%; border-radius: 6px; overflow: hidden; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-    th { background: #007BFF; color: #fff; }
-    tr:nth-child(even) { background: #f2f2f2; }
-    tr:hover { background: #e0f0ff; }
+      #log-out {
+        background: #dc3545;
+        margin-top: 10px;
+      }
+      #log-out:hover {
+        background: #a71d2a;
+      }
 
-    #teacher-info, #stu { margin-top: 20px; }
+      table {
+        border-collapse: collapse;
+        margin-top: 10px;
+        width: 100%;
+        border-radius: 6px;
+        overflow: hidden;
+      }
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background: #007bff;
+        color: #fff;
+      }
+      tr:nth-child(even) {
+        background: #f2f2f2;
+      }
+      tr:hover {
+        background: #e0f0ff;
+      }
 
-    #error-message { color: #dc3545; font-weight: bold; }
-    #welcome-msg { font-weight: bold; color: #007BFF; margin-top: 10px; }
+      #teacher-info,
+      #stu {
+        margin-top: 20px;
+      }
 
-    .section { margin-bottom: 20px; }
-  </style>
-</head>
-<body>
+      #error-message {
+        color: #dc3545;
+        font-weight: bold;
+      }
+      #welcome-msg {
+        font-weight: bold;
+        color: #007bff;
+        margin-top: 10px;
+      }
 
-  <div id="container">
-    <div id="login-form">
+      .section {
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <div id="login-form">
+        <!-- Register -->
+        <div class="section">
+          <h2>Register</h2>
+          <input
+            type="text"
+            id="reg-username"
+            placeholder="Create username"
+          /><br />
+          <input
+            type="password"
+            id="reg-password"
+            placeholder="Create password"
+          /><br />
+          <select id="reg-role">
+            <option value="student">student</option>
+            <option value="teacher">teacher</option></select
+          ><br />
+          <button onclick="Ragister()">Register</button>
+        </div>
 
-      <!-- Register -->
-      <div class="section">
-        <h2>Register</h2>
-        <input type="text" id="reg-username" placeholder="Create username" /><br>
-        <input type="password" id="reg-password" placeholder="Create password" /><br>
-        <select id="reg-role">
-          <option value="student">student</option>
-          <option value="teacher">teacher</option>
-        </select><br>
-        <button onclick="Ragister()">Register</button>
+        <!-- Login -->
+        <div class="section">
+          <h2>Login</h2>
+          <input type="text" id="username" placeholder="Enter username" /><br />
+          <input
+            type="password"
+            id="password"
+            placeholder="Enter password"
+          /><br />
+          <select id="login-role">
+            <option value="student">student</option>
+            <option value="teacher">teacher</option></select
+          ><br />
+          <button onclick="login()">Login</button>
+        </div>
       </div>
 
-      <!-- Login -->
-      <div class="section">
-        <h2>Login</h2>
-        <input type="text" id="username" placeholder="Enter username" /><br>
-        <input type="password" id="password" placeholder="Enter password" /><br>
-        <select id="login-role">
-          <option value="student">student</option>
-          <option value="teacher">teacher</option>
-        </select><br>
-        <button onclick="login()">Login</button>
-      </div>
+      <p id="error-message" style="display: none">
+        Invalid username or password
+      </p>
+      <p id="welcome-msg" style="display: none">
+        Welcome, <span id="usernametext"></span>
+      </p>
+      <button id="log-out" style="display: none" onclick="logout()">
+        Logout
+      </button>
     </div>
 
-    <p id="error-message" style="display:none;">Invalid username or password</p>
-    <p id="welcome-msg" style="display:none;">
-      Welcome, <span id="usernametext"></span>
-    </p>
-    <button id="log-out" style="display:none;" onclick="logout()">Logout</button>
-  </div>
+    <!-- TEACHER VIEW -->
+    <div id="teacher-info" style="display: none">
+      <input type="text" id="studentname" placeholder="Enter student Name" />
+      <button id="addstu">Add</button>
 
-  <!-- TEACHER VIEW -->
-  <div id="teacher-info" style="display:none;">
-    <input type="text" id="studentname" placeholder="Enter student Name">
-    <button id="addstu">Add</button>
+      <table id="te" style="display: none">
+        <tr>
+          <th>Student Name</th>
+          <th>Operation</th>
+        </tr>
+      </table>
+    </div>
 
-    <table id="te" style="display:none;">
+    <!-- STUDENT VIEW -->
+    <table id="stu" style="display: none">
       <tr>
-        <th>Student Name</th>
-        <th>Operation</th>
+        <th>Faculty Name</th>
+        <th>Subject</th>
+      </tr>
+      <tr>
+        <td>Bhavesh</td>
+        <td>Math</td>
+      </tr>
+      <tr>
+        <td>Devashish</td>
+        <td>Science</td>
+      </tr>
+      <tr>
+        <td>Dhruval</td>
+        <td>Hindi</td>
       </tr>
     </table>
-  </div>
 
-  <!-- STUDENT VIEW -->
-  <table id="stu" style="display:none;">
-    <tr>
-      <th>Faculty Name</th>
-      <th>Subject</th>
-    </tr>
-    <tr>
-      <td>Bhavesh</td>
-      <td>Math</td>
-    </tr>
-    <tr>
-      <td>Devashish</td>
-      <td>Science</td>
-    </tr>
-    <tr>
-      <td>Dhruval</td>
-      <td>Hindi</td>
-    </tr>
-  </table>
-
-  <script src="script.js"></script>
-</body>
+    <script src="script.js"></script>
+  </body>
 </html>
