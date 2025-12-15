@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login System</title>
+    <style>
+      * { font-family: Arial; }
+      table { border-collapse: collapse; margin-top: 20px; }
+      th, td { border: 1px solid black; padding: 8px; }
+      button { margin-left: 5px; }
+    </style>
+  </head>
+  <body>
+
+    <div id="container">
+      <div id="login-form">
+
+        <!-- Register -->
+        <div class="section">
+          <h2>Register</h2>
+          <input type="text" id="reg-username" placeholder="Create username" />
+          <input type="password" id="reg-password" placeholder="Create password" />
+          <select id="reg-role">
+            <option value="student">student</option>
+            <option value="teacher">teacher</option>
+          </select>
+          <button onclick="Ragister()">Register</button>
+        </div>
+
+        <!-- Login -->
+        <div class="section">
+          <h2>Login</h2>
+          <input type="text" id="username" placeholder="Enter username" />
+          <input type="password" id="password" placeholder="Enter password" />
+          <select id="login-role">
+            <option value="student">student</option>
+            <option value="teacher">teacher</option>
+          </select>
+          <button onclick="login()">Login</button>
+        </div>
+      </div>
+
+      <p id="error-message" style="display:none;color:red;">Invalid username or password</p>
+
+      <p id="welcome-msg" style="display:none;">
+        Welcome, <span id="usernametext"></span>
+      </p>
+
+      <button id="log-out" style="display:none;" onclick="logout()">Logout</button>
+      <br><br>
+    </div>
+
+    <!-- TEACHER VIEW -->
+    <div id="teacher-info" style="display:none;">
+      <input type="text" id="studentname" placeholder="Enter student Name">
+      <button id="addstu">Add</button>
+
+      <table id="te" style="display:none;">
+        <tr>
+          <th>Student Name</th>
+          <th>Operation</th>
+        </tr>
+      </table>
+    </div>
+
+    <!-- STUDENT VIEW -->
+    <table id="stu" style="display:none;">
+      <tr>
+        <th>Faculty Name</th>
+        <th>Subject</th>
+      </tr>
+      <tr>
+        <td>Bhavesh</td>
+        <td>Math</td>
+      </tr>
+      <tr>
+        <td>Devashish</td>
+        <td>Science</td>
+      </tr>
+      <tr>
+        <td>Dhruval</td>
+        <td>Hindi</td>
+      </tr>
+    </table>
+
+    <script src="script.js"></script>
+  </body>
+</html>
