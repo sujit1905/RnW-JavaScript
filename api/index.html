@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Corona</title>
+  </head>
+  <body>
+    <h1>Movies API</h1>
+    <button id="fetchMovies">Fetch Movies</button>
+    <div id="movData"></div>
+    <script>
+      const getMovies = document.getElementById("fetchMovies")
+      getMovies.addEventListener("click", ()=>{
+        fetch(
+        "https://my-json-server.typicode.com/horizon-code-academy/fake-movies-api/movies"
+      )
+        .then((response) => response.json())
+        .then(data => {
+          const movieData = data
+          let movies = ""
+
+          movieData.forEach(movie => {
+            movies += movie.Title + "<br/>"
+          })
+          document.getElementById("movData").innerHTML = movies
+        })
+        .catch((err) => console.log(err));
+      })
+    </script>
+  </body>
+</html>

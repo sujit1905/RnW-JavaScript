@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cricket API</title>
+  </head>
+  <body>
+    <h1>Cricket API Data</h1>
+    <button id="viewData">View Cricket Data</button>
+    <div id="displayData"></div>
+
+    <script>
+  const viewBtn = document.getElementById("viewData");
+
+  viewBtn.addEventListener("click", () => {
+    fetch("https://api.cricapi.com/v1/cricScore?apikey=9066e13b-33dd-45b4-b18e-0f72f5b34a20")
+      .then((result) => result.json())
+      .then((result) => {
+        let movie = "";
+
+        result.data.forEach(match => {
+  movie += match.status + "<br> <br>";
+});
+
+
+        document.getElementById("displayData").innerHTML = movie;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
+</script>
+
+  </body>
+</html>
