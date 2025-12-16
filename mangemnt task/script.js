@@ -6,6 +6,9 @@ let teTable = document.getElementById("te");
 let addBtn = document.getElementById("addstu");
 let studentInput = document.getElementById("studentname");
 
+let isLoading = false;
+
+
 /* ================= REGISTER ================= */
 function Ragister() {
   let username = document.getElementById("reg-username").value;
@@ -60,6 +63,11 @@ function login() {
 
 /* ================= LOGOUT ================= */
 function logout() {
+  let user = JSON.parse(localStorage.getItem("loginuser"));
+  if (user?.role === "teacher") {
+    localStorage.removeItem("teacherTable_" + user.username);
+  }
+
   localStorage.removeItem("loginuser");
   hideAllViews();
 
@@ -68,6 +76,7 @@ function logout() {
   document.getElementById("welcome-msg").style.display = "none";
   clearTeacherTable();
 }
+
 
 /* ================= CHECK LOGIN ================= */
 function checkLoggedIn() {
@@ -120,8 +129,11 @@ function addStudentToTable(name) {
     <button onclick="removeStudent(this)">Remove</button>
   `;
 
-  saveTeacherTable();
+  if (!isLoading) {
+    saveTeacherTable();
+  }
 }
+
 
 function editStudent(btn) {
   let row = btn.parentElement.parentElement;
@@ -149,9 +161,14 @@ function saveTeacherTable() {
 }
 
 function loadTeacherTable(username) {
+  isLoading = true;
   clearTeacherTable();
+
   let students = JSON.parse(localStorage.getItem("teacherTable_" + username)) || [];
   students.forEach(name => addStudentToTable(name));
+
+  isLoading = false;
 }
+
 
 checkLoggedIn();
