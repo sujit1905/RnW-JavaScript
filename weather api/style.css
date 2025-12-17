@@ -1,3 +1,4 @@
+/* Reset default styles */
 * {
   margin: 0;
   padding: 0;
@@ -5,6 +6,7 @@
   font-family: "Inter", Arial, sans-serif;
 }
 
+/* Center layout */
 body {
   min-height: 100vh;
   background: #020617;
@@ -24,7 +26,7 @@ body {
   text-align: center;
 }
 
-/* Heading */
+/* Title */
 .card h1 {
   font-size: 28px;
   font-weight: 600;
@@ -37,7 +39,7 @@ body {
   margin-bottom: 20px;
 }
 
-/* Input */
+/* Input group */
 .input-group {
   display: flex;
   gap: 10px;
@@ -51,15 +53,10 @@ input {
   border: 1px solid #333;
   color: #fff;
   outline: none;
-  font-size: 14px;
 }
 
 input::placeholder {
   color: #777;
-}
-
-input:focus {
-  border-color: #fff;
 }
 
 /* Button */
@@ -71,14 +68,9 @@ button {
   border: none;
   font-weight: 600;
   cursor: pointer;
-  transition: 0.25s ease;
 }
 
-button:hover {
-  background: #e5e5e5;
-}
-
-/* Result */
+/* Result box */
 .result-box {
   margin-top: 18px;
   padding: 14px;
@@ -90,7 +82,7 @@ button:hover {
   display: none;
 }
 
-/* Small animation */
+/* Show result */
 .result-box.show {
   display: block;
 }

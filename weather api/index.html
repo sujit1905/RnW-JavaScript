@@ -4,19 +4,23 @@
   <meta charset="UTF-8" />
   <title>Weather App</title>
   <link rel="stylesheet" href="style.css" />
+  <!-- Responsive layout -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 
+  <!-- Main card container -->
   <div class="card">
     <h1>🌤 Weather</h1>
     <p class="subtitle">Check weather of any city</p>
 
+    <!-- Input and button -->
     <div class="input-group">
-      <input type="text" id="cityInput" placeholder="Enter city name" />
+      <input type="text" id="cityInput" placeholder="Enter city name"/>
       <button onclick="getWeather()">Search</button>
     </div>
 
+    <!-- Weather result -->
     <div id="weatherResult" class="result-box"></div>
   </div>
 
