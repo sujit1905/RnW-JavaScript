@@ -1,0 +1,96 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", Arial, sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  background: #020617;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+
+/* Card */
+.card {
+  width: 360px;
+  padding: 28px;
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid #222;
+  text-align: center;
+}
+
+/* Heading */
+.card h1 {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: #aaa;
+  margin-bottom: 20px;
+}
+
+/* Input */
+.input-group {
+  display: flex;
+  gap: 10px;
+}
+
+input {
+  flex: 1;
+  padding: 12px;
+  border-radius: 8px;
+  background: #000;
+  border: 1px solid #333;
+  color: #fff;
+  outline: none;
+  font-size: 14px;
+}
+
+input::placeholder {
+  color: #777;
+}
+
+input:focus {
+  border-color: #fff;
+}
+
+/* Button */
+button {
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: #fff;
+  color: #000;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+button:hover {
+  background: #e5e5e5;
+}
+
+/* Result */
+.result-box {
+  margin-top: 18px;
+  padding: 14px;
+  border-radius: 10px;
+  background: #000;
+  border: 1px solid #333;
+  font-size: 14px;
+  line-height: 1.7;
+  display: none;
+}
+
+/* Small animation */
+.result-box.show {
+  display: block;
+}
